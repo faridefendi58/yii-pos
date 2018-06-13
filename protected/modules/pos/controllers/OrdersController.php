@@ -794,9 +794,12 @@ class OrdersController extends EController
             Yii::app()->clientScript->scriptMap['jquery.js'] = false;
             Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
 
+            $customer_model = new Customer();
+            $customers = $customer_model->list_items('Pilih Pelanggan');
+
             echo CJSON::encode(array(
                 'status' => 'success',
-                'div' => $this->renderPartial('_list_customer', null, true, true),
+                'div' => $this->renderPartial('_list_customer', array('items' => $customers, 'selected' => $customer_model->get_last_item()), true, true)
             ));
             exit;
         }
