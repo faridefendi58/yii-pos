@@ -27,6 +27,7 @@
 			$url=CHtml::normalizeUrl(array('/'.Yii::app()->controller->module->id.'/orders/paymentRequestUpdate/id/'.$id));
 		echo CHtml::ajaxSubmitButton(Yii::t('order', 'Save Transaction'),$url,array('dataType'=>'json','success'=>'js:
 					function(data){
+		                console.log(data);
 						if(data.status=="success"){
 							$("#change").empty();
 							$("#sub-total").html(0);
@@ -40,7 +41,9 @@
 							$("#promocode").hide();
 							//auto print struk after transaction complete
 							//printStruk(data.invoice_id);
-							//window.location.reload(true);
+							setTimeout(function(){
+							    window.location.reload(true);
+							}, 2000);
 						}
 						return false;
 					}'

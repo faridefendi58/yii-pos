@@ -149,4 +149,14 @@ class Customer extends CActiveRecord
 		}
 		return $items;
 	}
+
+	public function get_last_item()
+    {
+        $sql = "SELECT CONCAT(id,' - ',name) AS item FROM tbl_customer ORDER BY id DESC LIMIT 1";
+        $command = Yii::app()->db2->createCommand($sql);
+
+        $row = $command->queryRow();
+
+        return $row['item'];
+    }
 }

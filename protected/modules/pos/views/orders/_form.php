@@ -378,15 +378,16 @@ function pushFindCustomer(nama,url)
 		'url': url,
 		'type':'post',
 		'data':{'nama':nama},
-	      	'dataType': 'json',
-	      	'success': function(data){
-				if(data.status=='success'){
-					$('#customer-name').html(data.div);
-					$('#customer-name').css('display','block');
-					$('#find-customer').css('display','none');
-					$("input[id=\'scan\']").focus();
-				}
-	      		},
+        'dataType': 'json',
+        'success': function(data){
+		    console.log(data);
+            if(data.status=='success'){
+                $('#customer-name').html(data.div);
+                $('#customer-name').css('display','block');
+                $('#find-customer').css('display','none');
+                $("input[id=\'scan\']").focus();
+            }
+        },
 	});
 	return false;	
 }
@@ -455,6 +456,7 @@ function reloadCustomerList()
         'type':'post',
         'dataType': 'json',
         'success': function(data){
+            console.log(data);
             if(data.status=='success'){
                 $('#customer-list').html(data.div);
             }
