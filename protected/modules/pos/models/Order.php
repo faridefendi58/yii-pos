@@ -247,7 +247,14 @@ class Order extends CActiveRecord
 
 	public function getRankOrder($limit=10)
 	{
-		$q=Yii::app()->db2->createCommand("SELECT COUNT(t.id) AS tot, t.product_id, p.name FROM `tbl_order` t LEFT JOIN tbl_product p ON p.id=t.product_id WHERE t.status=1 GROUP BY t.product_id ORDER BY tot DESC LIMIT ".$limit."")->queryAll();
+	    $sql = "SELECT SUM(t.quantity) AS tot, t.product_id, p.name 
+          FROM `tbl_order` t 
+          LEFT JOIN tbl_product p ON p.id=t.product_id 
+          WHERE t.status = 1 
+          GROUP BY t.product_id 
+          ORDER BY tot DESC LIMIT ".$limit;
+
+		$q = Yii::app()->db2->createCommand($sql)->queryAll();
 		
 		return $q;
 	}
@@ -265,13 +272,13 @@ class Order extends CActiveRecord
 		return $tot;
 	}
 
-	public function getTotalOrderDate($date,$product_id=0,$shift=0)
+	public function getTotalOrderDate($date, $product_id=0, $shift=0)
 	{
-		if($product_id==0){
-			if($shift==0){
+		if ($product_id == 0) {
+			if ($shift == 0){
 				$q=Yii::app()->db2->createCommand("SELECT SUM(t.price) AS tot FROM `tbl_invoice_item` t LEFT JOIN `tbl_invoice` i ON i.id=t.invoice_id WHERE i.status=1 AND DATE_FORMAT(i.paid_at, '%Y-%m-%d') = DATE_FORMAT('".$date."', '%Y-%m-%d')")->queryRow();
 				$tot=$q['tot'];
-			}else{
+			} else {
 				$daily_open=Yii::app()->config->get('daily_open');
 				$shift_hour=Yii::app()->config->get('shift_hour');
 				if($shift==1)
@@ -477,5 +484,88 @@ class Order extends CActiveRecord
         }
 
         return $income;
+    }
+
+    public function getSoldItem($period = 'today')
+    {
+        switch ($period) {
+            case 'today':
+                $sql = "SELECT SUM(t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND DATE_FORMAT(t.date_entry, '%Y-%m-%d') = CURDATE()";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'yesterday':
+                $sql = "SELECT SUM(t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND DATEDIFF(CURDATE(), DATE_FORMAT(t.date_entry, '%Y-%m-%d')) = 1";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'thismonth':
+                $sql = "SELECT SUM(t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND month(t.date_entry) = EXTRACT(month FROM (NOW()))";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'lastmonth':
+                $sql = "SELECT SUM(t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND YEAR(t.date_entry) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(t.date_entry) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'total':
+                $sql = "SELECT SUM(t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+        }
+
+        return $income;
+    }
+
+    public function getTotalMarginDate($date, $product_id = 0)
+    {
+        if ($product_id == 0) {
+            $sql = "SELECT SUM((t.price - t.cost_price) * t.quantity) AS tot 
+              FROM `tbl_order` t 
+              LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+              WHERE i.status = 1 AND DATE_FORMAT(i.paid_at, '%Y-%m-%d') = DATE_FORMAT('".$date."', '%Y-%m-%d')";
+
+            $q = Yii::app()->db2->createCommand($sql)->queryRow();
+
+            $tot = $q['tot'];
+        } else {
+            $sql = "SELECT SUM((t.price - t.cost_price) * t.quantity) AS tot 
+              FROM `tbl_order` t 
+              LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+              WHERE i.status = 1 AND DATE_FORMAT(i.paid_at, '%Y-%m-%d') = DATE_FORMAT('".$date."', '%Y-%m-%d') 
+                AND t.product_id = ".$product_id;
+
+            $q = Yii::app()->db2->createCommand($sql)->queryRow();
+
+            $tot = $q['tot'];
+        }
+
+        return $tot;
     }
 }

@@ -43,40 +43,47 @@ class ReportsController extends EController
 	 */
 	public function actionView()
 	{
-		/*$criteria=new CDbCriteria;
-		if(isset($_GET['Order'])){
-			$criteria->compare('date_entry','>='.$_GET['Order']['date_from']);
-			$criteria->compare('date_entry','<='.$_GET['Order']['date_to'],true,'AND');
-		}else
-			$criteria->compare('date_entry','>='.date("Y-m-d"));
-		$criteria->order='date_entry ASC';
+		$data_from = (!empty($_GET['Order']['date_from']))? strtotime($_GET['Order']['date_from']) : time()-(24*3600);
+		$data_to = (!empty($_GET['Order']['date_to']))? strtotime($_GET['Order']['date_to']) : time();
 
-		$dataProvider=new CActiveDataProvider('Order',array('criteria'=>$criteria));*/
-		$data_from=(!empty($_GET['Order']['date_from']))? strtotime($_GET['Order']['date_from']) : time()-(24*3600);
-		$data_to=(!empty($_GET['Order']['date_to']))? strtotime($_GET['Order']['date_to']) : time();
-		$rawData=array();
-		for($i=$data_from; $i<=$data_to; $i=$i+86400) {
-			$rawData[]=array(
-					'date'=>date('Y-m-d', $i),
-					'total_pembelian'=>Order::getCountOrderItemDate(date('Y-m-d', $i)),
-					'total_pendapatan'=>Order::getTotalOrderDate(date('Y-m-d', $i)),
+		$rawData = array();
+		$sum_of_total_pembelian = 0;
+		$sum_of_total_pendapatan = 0;
+		$sum_of_total_net_margin = 0;
+		for ($i=$data_from; $i<=$data_to; $i=$i+86400) {
+		    $total_pembelian = Order::getCountOrderItemDate(date('Y-m-d', $i));
+		    $total_pendapatan = Order::getTotalOrderDate(date('Y-m-d', $i));
+		    $total_net_margin = Order::getTotalMarginDate(date('Y-m-d', $i));
+
+			$rawData[] = array(
+					'date' => date('Y-m-d', $i),
+					'total_pembelian' => $total_pembelian,
+					'total_pendapatan' => $total_pendapatan,
+					'total_net_margin' => $total_net_margin,
 				);
+            $sum_of_total_pembelian = $sum_of_total_pembelian + $total_pembelian;
+            $sum_of_total_pendapatan = $sum_of_total_pendapatan + $total_pendapatan;
+            $sum_of_total_net_margin = $sum_of_total_net_margin + $total_net_margin;
 		}
 
-		$dataProvider=new CArrayDataProvider($rawData, array(
-			'id'=>'date-order',
-			'sort'=>array(
-				'attributes'=>array(
+		$dataProvider = new CArrayDataProvider($rawData, array(
+			'id' => 'date-order',
+			'sort' => array(
+				'attributes' => array(
 				     'id', 'username', 'email',
 				),
 			),
-			'pagination'=>array(
-				'pageSize'=>20,
+			'pagination' => array(
+				'pageSize' => 20,
 			),
 		));
+
 		$this->render('view',array(
-			'dataProvider'=>$dataProvider,
-			'model'=>new Order,
+			'dataProvider' => $dataProvider,
+			'model' => new Order,
+            'sum_of_total_pembelian' => $sum_of_total_pembelian,
+            'sum_of_total_pendapatan' => $sum_of_total_pendapatan,
+            'sum_of_total_net_margin' => $sum_of_total_net_margin
 		));
 	}
 

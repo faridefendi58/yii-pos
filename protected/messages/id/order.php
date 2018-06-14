@@ -52,10 +52,19 @@ return array(
 	'Metric' => 'Metrik',
 	'Income' => 'Pendapatan',
 	'Order Product' => 'Produk Terjual',
-	'Sales Number' => 'Jumlah Penjualan',
+	'Sales Number' => 'Jumlah Transaksi',
 	'Net Margin' => 'Laba Bersih',
 	'Customer Name' => 'Nama Pelanggan',
 	'Customer Phone' => 'Nomor Hp/Wa',
 	'Customer Address' => 'Alamat Pelanggan',
+	'Sold Item' => 'Total Item Terjual',
+	'Top 10 Product Sales' => '10 Besar Produk Terlaris',
+	'Product Name' => 'Nama Produk',
+    'Sum Of Net Margin' => 'Total Laba Bersih',
+	'Sum Of Total Income' => 'Total Jumah Pendapatan',
+	'Sum Of Net Margin' => 'Total Laba Bersih',
+	'Sum Of Sold Item' => 'Jumlah Total Item Terjual',
+	'Add Notes' => 'Tambahkan Catatan',
+	'Please insert the notes if needed' => 'Silakan berikan catatan jika diperlukan'
 );
 ?>

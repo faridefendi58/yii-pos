@@ -92,12 +92,12 @@ $this->pageTitle='Dashboard | '.Yii::app()->config->get('site_name');
 							<th>Rp. <?php echo number_format(Order::getIncome('total'),0,',','.');?></th>
 						</tr>
 						<tr>
-							<th><?php echo Yii::t('order', 'Order Product'); ?></th>
-							<th><?php echo Order::getOrder('today');?></th>
-							<th><?php echo Order::getOrder('yesterday');?></th>
-							<th><?php echo Order::getOrder('thismonth');?></th>
-							<th><?php echo Order::getOrder('lastmonth');?></th>
-							<th><?php echo Order::getOrder('total');?></th>
+							<th><?php echo Yii::t('order', 'Sold Item'); ?></th>
+							<th><?php echo Order::getSoldItem('today');?></th>
+							<th><?php echo Order::getSoldItem('yesterday');?></th>
+							<th><?php echo Order::getSoldItem('thismonth');?></th>
+							<th><?php echo Order::getSoldItem('lastmonth');?></th>
+							<th><?php echo Order::getSoldItem('total');?></th>
 						</tr>
 						<tr>
 							<th><?php echo Yii::t('order', 'Sales Number'); ?></th>
@@ -139,11 +139,17 @@ $this->pageTitle='Dashboard | '.Yii::app()->config->get('site_name');
 			<div class="panel-body">
 				<div class="table-responsive mar_top1">
 						<table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><?php echo Yii::t('order', 'Product Name'); ?></th>
+                                    <th><?php echo Yii::t('order', 'Sold Item'); ?></th>
+                                </tr>
+                            </thead>
 							<tbody>
 								<?php foreach(Order::getRankOrder() as $index=>$data):?>
 								<tr>
 									<td><?php echo $data['name'];?></td>
-									<td><?php echo $data['tot'];?></td>
+									<td class="text-center"><?php echo $data['tot'];?></td>
 								</tr>
 								<?php endforeach;?>
 							</tbody>
