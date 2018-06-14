@@ -53,6 +53,9 @@ return array(
 	'Income' => 'Pendapatan',
 	'Order Product' => 'Produk Terjual',
 	'Sales Number' => 'Jumlah Penjualan',
-	'Net Margin' => 'Laba Bersih'
+	'Net Margin' => 'Laba Bersih',
+	'Customer Name' => 'Nama Pelanggan',
+	'Customer Phone' => 'Nomor Hp/Wa',
+	'Customer Address' => 'Alamat Pelanggan',
 );
 ?>

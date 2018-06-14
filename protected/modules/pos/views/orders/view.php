@@ -105,16 +105,31 @@ $('.search-form form').submit(function(){
 							'type'=>'raw',
 							'value'=>'number_format($data->price,0,\',\',\'.\')'
 						),
-						array(
+						/*array(
 							'name'=>'discount',
 							'type'=>'raw',
 							'value'=>'number_format($data->discount,0,\',\',\'.\')'
-						),
-						array(
-							'name'=>'date_entry',
-							'type'=>'raw',
-							'value'=>'date("d-m-Y H:i",strtotime($data->date_entry))'
-						),
+						),*/
+                        array(
+                            'header' => Yii::t('order', 'Customer Name'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->name'
+                        ),
+                        array(
+                            'header' => Yii::t('order', 'Customer Phone'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->telephone'
+                        ),
+                        array(
+                            'header' => Yii::t('order', 'Customer Address'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->address'
+                        ),
+                        array(
+                            'name'=>'date_entry',
+                            'type'=>'raw',
+                            'value'=>'date("d-m-Y H:i",strtotime($data->date_entry))'
+                        ),
 						array(
 							'class'=>'CButtonColumn',
 							'template'=>'{update}{invoice}{delete}',
@@ -174,11 +189,26 @@ $('.search-form form').submit(function(){
 							'type'=>'raw',
 							'value'=>'number_format($data->price,0,\',\',\'.\')'
 						),
-						array(
+						/*array(
 							'name'=>'discount',
 							'type'=>'raw',
 							'value'=>'number_format($data->discount,0,\',\',\'.\')'
-						),
+						),*/
+                        array(
+                            'header' => Yii::t('order', 'Customer Name'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->name'
+                        ),
+                        array(
+                            'header' => Yii::t('order', 'Customer Phone'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->telephone'
+                        ),
+                        array(
+                            'header' => Yii::t('order', 'Customer Address'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->address'
+                        ),
 						array(
 							'name'=>'date_entry',
 							'type'=>'raw',
@@ -243,11 +273,26 @@ $('.search-form form').submit(function(){
 							'type'=>'raw',
 							'value'=>'number_format($data->price,0,\',\',\'.\')'
 						),
-						array(
+						/*array(
 							'name'=>'discount',
 							'type'=>'raw',
 							'value'=>'number_format($data->discount,0,\',\',\'.\')'
-						),
+						),*/
+                        array(
+                            'header' => Yii::t('order', 'Customer Name'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->name'
+                        ),
+                        array(
+                            'header' => Yii::t('order', 'Customer Phone'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->telephone'
+                        ),
+                        array(
+                            'header' => Yii::t('order', 'Customer Address'),
+                            'type' => 'raw',
+                            'value' => '$data->customer_rel->address'
+                        ),
 						array(
 							'name'=>'date_entry',
 							'type'=>'raw',
