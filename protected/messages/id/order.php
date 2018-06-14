@@ -43,5 +43,16 @@ return array(
 	'Number Of Sales'=>'Total Penjualan',
 	'Total Income'=>'Jumlah Pendapatan',
 	'Analytic'=>'Analitik',
+	'Transaction By Product' => 'Transaksi Berdasarkan Produk',
+	'Price Per Item' => 'Harga Satuan',
+	'Today' => 'Hari Ini',
+	'Yesterday' => 'Kemarin',
+	'This Month So Far' => 'Dalam Bulan Ini',
+	'Last Month' => 'Bulan Kemarin',
+	'Metric' => 'Metrik',
+	'Income' => 'Pendapatan',
+	'Order Product' => 'Produk Terjual',
+	'Sales Number' => 'Jumlah Penjualan',
+	'Net Margin' => 'Laba Bersih'
 );
 ?>

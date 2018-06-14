@@ -209,6 +209,7 @@ class OrdersController extends EController
                 if ((int)$_POST['qty'] <= (int)$model->price->current_stock) { //jika kurang dari atau sm dengan persediaan
                     $price = 0;
                     if ($model->discount_rel_count > 0) {
+                        $discount_founded = false;
                         foreach ($model->getDiscontedItems() as $index => $data) {
                             if ($data->quantity <= 0)
                                 $data->quantity = 1;
@@ -229,12 +230,15 @@ class OrdersController extends EController
                                     $price = $data->base_price;
                                     $items_belanja[$id]['unit_price'] = $data->base_price;
                                     $items_belanja[$id]['discount'] = ($items_belanja[$id]['unit_price'] - $price) * $items_belanja[$id]['qty'];
+                                    $discount_founded = true;
                                 } else {
                                     $items_belanja[$id]['discount'] = 0;
                                 }
                             } else {
-                                $items_belanja[$id]['discount'] = 0;
-                                $items_belanja[$id]['unit_price'] = $model->price->sold_price;
+                                if (!$discount_founded) {
+                                    $items_belanja[$id]['discount'] = 0;
+                                    $items_belanja[$id]['unit_price'] = $model->price->sold_price;
+                                }
                             }
                         }
                     } else {
@@ -243,6 +247,7 @@ class OrdersController extends EController
                             $items_belanja[$id]['discount'] = Promo::getDiscountValue(Yii::app()->user->getState('promocode'), $price);
                         $items_belanja[$id]['discount'] = 0;
                     }
+
                     // update the session
                     Yii::app()->user->setState('items_belanja', $items_belanja);
                     if ($price > 0)

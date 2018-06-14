@@ -421,4 +421,61 @@ class Order extends CActiveRecord
 		}
 		return true;
 	}
+
+    public function getMargin($period = 'today')
+    {
+        switch ($period) {
+            case 'today':
+                $sql = "SELECT SUM((t.price - t.cost_price)*t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND DATE_FORMAT(t.date_entry, '%Y-%m-%d') = CURDATE()";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'yesterday':
+                $sql = "SELECT SUM((t.price - t.cost_price)*t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND DATEDIFF(CURDATE(), DATE_FORMAT(t.date_entry, '%Y-%m-%d')) = 1";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'thismonth':
+                $sql = "SELECT SUM((t.price - t.cost_price)*t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND month(t.date_entry) = EXTRACT(month FROM (NOW()))";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'lastmonth':
+                $sql = "SELECT SUM((t.price - t.cost_price)*t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1 
+                  AND YEAR(t.date_entry) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(t.date_entry) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH)";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+            case 'total':
+                $sql = "SELECT SUM((t.price - t.cost_price)*t.quantity) AS tot 
+                  FROM `tbl_order` t 
+                  LEFT JOIN `tbl_invoice` i ON i.id = t.invoice_id 
+                  WHERE i.status = 1";
+
+                $q = Yii::app()->db2->createCommand($sql)->queryRow();
+                $income = $q['tot'];
+                break;
+        }
+
+        return $income;
+    }
 }
