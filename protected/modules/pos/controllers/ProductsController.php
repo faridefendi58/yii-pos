@@ -33,7 +33,7 @@ class ProductsController extends EController
 				'expression'=>'Rbac::ruleAccess(\'read_p\')',
 			),
 			array('allow',
-				'actions'=>array('create'),
+				'actions'=>array('create', 'addDiscount'),
 				'expression'=>'Rbac::ruleAccess(\'create_p\')',
 			),
 			array('allow',
@@ -41,7 +41,7 @@ class ProductsController extends EController
 				'expression'=>'Rbac::ruleAccess(\'update_p\')',
 			),
 			array('allow',
-				'actions'=>array('delete'),
+				'actions'=>array('delete', 'deleteDiscount'),
 				'expression'=>'Rbac::ruleAccess(\'delete_p\')',
 			),
 			array('deny',  // deny all users
@@ -59,6 +59,7 @@ class ProductsController extends EController
 		$model=new Product;
 		$model2=new ProductPrice;
 		$model2->current_stock=100;
+        $model3 = new ProductDiscount();
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -93,7 +94,8 @@ class ProductsController extends EController
 
 		$this->render('create',array(
 			'model'=>$model,
-			'model2'=>$model2
+			'model2'=>$model2,
+            'model3' => $model3
 		));
 	}
 
@@ -112,6 +114,8 @@ class ProductsController extends EController
 		$model2=$model->price;
 		if(empty($model2))
 			$model2=new ProductPrice;
+
+		$model3 = new ProductDiscount();
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -142,6 +146,24 @@ class ProductsController extends EController
 					$model2->user_update=Yii::app()->user->id;
 					$model2->save();
 				}
+
+				if (isset($_POST['ProductDiscount']) && count($_POST['ProductDiscount']) > 0) {
+                    foreach ($_POST['ProductDiscount']['quantity'] as $discount_id => $discount_value) {
+                        if (!empty($_POST['ProductDiscount']['id'][$discount_id])) {
+                            $pd_model = ProductDiscount::model()->findByPk($_POST['ProductDiscount']['id'][$discount_id]);
+                        } else {
+                            $pd_model = new ProductDiscount();
+                            $pd_model->product_id = $model->id;
+                        }
+
+                        $pd_model->quantity = (int)$discount_value;
+                        $pd_model->quantity_max = (int)$_POST['ProductDiscount']['quantity_max'][$discount_id];
+                        $pd_model->base_price = (int)$_POST['ProductDiscount']['base_price'][$discount_id];
+                        $pd_model->date_start = date("Y-m-d", strtotime($_POST['ProductDiscount']['date_start'][$discount_id]));
+                        $pd_model->date_end = date("Y-m-d", strtotime($_POST['ProductDiscount']['date_end'][$discount_id]));
+                        $pd_model->save();
+                    }
+                }
 				Yii::app()->user->setFlash('update',Yii::t('global','Your data has been saved successfully.'));
 				$this->refresh();
 			}
@@ -149,7 +171,8 @@ class ProductsController extends EController
 
 		$this->render('update',array(
 			'model'=>$model,
-			'model2'=>$model2
+			'model2'=>$model2,
+            'model3' => $model3
 		));
 	}
 
@@ -213,4 +236,40 @@ class ProductsController extends EController
 			Yii::app()->end();
 		}
 	}
+
+    public function actionAddDiscount()
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            // Stop jQuery from re-initialization
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery-ui.min.js'] = false;
+
+            $model = new ProductDiscount();
+
+            echo CJSON::encode(array(
+                'status' => 'success',
+                'div' => $this->renderPartial('_discount', array('model' => $model), true, true)
+            ));
+            exit;
+        }
+    }
+
+    public function actionDeleteDiscount($id)
+    {
+        if (Yii::app()->request->isAjaxRequest) {
+            // Stop jQuery from re-initialization
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $model = ProductDiscount::model()->findByPk($id);
+            if ($model->delete()) {
+                echo CJSON::encode(array('status' => 'success'));
+            } else {
+                echo CJSON::encode(array('status' => 'failed'));
+            }
+
+            exit;
+        }
+    }
 }

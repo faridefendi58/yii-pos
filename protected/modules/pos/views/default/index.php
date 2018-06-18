@@ -74,7 +74,7 @@ $this->pageTitle='Dashboard | '.Yii::app()->config->get('site_name');
 				<table class="table table-striped mb30 items">
 					<thead>
 						<tr>
-							<th>Metric</th>
+							<th><?php echo Yii::t('order', 'Metric'); ?></th>
 							<th><?php echo Yii::t('order','Today');?></th>
 							<th><?php echo Yii::t('order','Yesterday');?></th>
 							<th><?php echo Yii::t('order','This Month So Far');?></th>
@@ -84,29 +84,37 @@ $this->pageTitle='Dashboard | '.Yii::app()->config->get('site_name');
 					</thead>
 					<tbody>
 						<tr>
-							<th>Income</th>
-							<th>Rp. <?php echo number_format(Order::getIncome('today'),2,',','.');?></th>
-							<th>Rp. <?php echo number_format(Order::getIncome('yesterday'),2,',','.');?></th>
-							<th>Rp. <?php echo number_format(Order::getIncome('thismonth'),2,',','.');?></th>
-							<th>Rp. <?php echo number_format(Order::getIncome('lastmonth'),2,',','.');?></th>
-							<th>Rp. <?php echo number_format(Order::getIncome('total'),2,',','.');?></th>
+							<th><?php echo Yii::t('order', 'Income'); ?></th>
+							<th>Rp. <?php echo number_format(Order::getIncome('today'),0,',','.');?></th>
+							<th>Rp. <?php echo number_format(Order::getIncome('yesterday'),0,',','.');?></th>
+							<th>Rp. <?php echo number_format(Order::getIncome('thismonth'),0,',','.');?></th>
+							<th>Rp. <?php echo number_format(Order::getIncome('lastmonth'),0,',','.');?></th>
+							<th>Rp. <?php echo number_format(Order::getIncome('total'),0,',','.');?></th>
 						</tr>
 						<tr>
-							<th>Order</th>
-							<th><?php echo Order::getOrder('today');?></th>
-							<th><?php echo Order::getOrder('yesterday');?></th>
-							<th><?php echo Order::getOrder('thismonth');?></th>
-							<th><?php echo Order::getOrder('lastmonth');?></th>
-							<th><?php echo Order::getOrder('total');?></th>
+							<th><?php echo Yii::t('order', 'Sold Item'); ?></th>
+							<th><?php echo Order::getSoldItem('today');?></th>
+							<th><?php echo Order::getSoldItem('yesterday');?></th>
+							<th><?php echo Order::getSoldItem('thismonth');?></th>
+							<th><?php echo Order::getSoldItem('lastmonth');?></th>
+							<th><?php echo Order::getSoldItem('total');?></th>
 						</tr>
 						<tr>
-							<th>Invoice</th>
+							<th><?php echo Yii::t('order', 'Sales Number'); ?></th>
 							<th><?php echo Order::getInvoice('today');?></th>
 							<th><?php echo Order::getInvoice('yesterday');?></th>
 							<th><?php echo Order::getInvoice('thismonth');?></th>
 							<th><?php echo Order::getInvoice('lastmonth');?></th>
 							<th><?php echo Order::getInvoice('total');?></th>
 						</tr>
+                        <tr>
+                            <th><?php echo Yii::t('order', 'Net Margin'); ?></th>
+                            <th>Rp. <?php echo number_format(Order::getMargin('today'),0,',','.');?></th>
+                            <th>Rp. <?php echo number_format(Order::getMargin('yesterday'),0,',','.');?></th>
+                            <th>Rp. <?php echo number_format(Order::getMargin('thismonth'),0,',','.');?></th>
+                            <th>Rp. <?php echo number_format(Order::getMargin('lastmonth'),0,',','.');?></th>
+                            <th>Rp. <?php echo number_format(Order::getMargin('total'),0,',','.');?></th>
+                        </tr>
 					</tbody>
 				</table>
 		</div>
@@ -131,11 +139,17 @@ $this->pageTitle='Dashboard | '.Yii::app()->config->get('site_name');
 			<div class="panel-body">
 				<div class="table-responsive mar_top1">
 						<table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><?php echo Yii::t('order', 'Product Name'); ?></th>
+                                    <th><?php echo Yii::t('order', 'Sold Item'); ?></th>
+                                </tr>
+                            </thead>
 							<tbody>
 								<?php foreach(Order::getRankOrder() as $index=>$data):?>
 								<tr>
 									<td><?php echo $data['name'];?></td>
-									<td><?php echo $data['tot'];?></td>
+									<td class="text-center"><?php echo $data['tot'];?></td>
 								</tr>
 								<?php endforeach;?>
 							</tbody>

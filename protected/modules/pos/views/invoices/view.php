@@ -40,7 +40,8 @@ $('.search-form form').submit(function(){
 ");
 ?>
 <ul class="row stats">
-	<li class="col-xs-3">
+	<?php /*
+    <li class="col-xs-3">
 		<a class="btn btn-default" href="#paid-invoice"><?php echo $paidProvider->totalItemCount;?></a>
 		<span><?php echo Yii::t('order','Paid Invoice');?></span>
 	</li>
@@ -48,6 +49,7 @@ $('.search-form form').submit(function(){
 		<a class="btn btn-default" href="#unpaid-invoice"><?php echo $unpaidProvider->totalItemCount;?></a>
 		<span><?php echo Yii::t('order','Unpaid Invoice');?></span>
 	</li>
+    */ ?>
 	<li class="col-xs-3">
 		<a class="btn btn-default" href="#refund-invoice"><?php echo $unpaidProvider->totalItemCount;?></a>
 		<span><?php echo Yii::t('order','Refund Invoice');?></span>
@@ -64,7 +66,7 @@ $('.search-form form').submit(function(){
 	<div class="panel-body">
 		<?php echo CHtml::link(Yii::t('global','Advanced Search'),'#',array('class'=>'search-button pull-right btn btn-default-alt')); ?>
 		<ul class="nav nav-tabs">
-			<li class="">
+			<?php /*<li class="">
 				<a data-toggle="tab" href="#paid-invoice">
 					<strong><?php echo Yii::t('order','Paid Invoice');?></strong> <span class="badge badge-warning"><?php echo $paidProvider->totalItemCount;?></span>
 				</a>
@@ -73,7 +75,7 @@ $('.search-form form').submit(function(){
 				<a data-toggle="tab" href="#unpaid-invoice">
 					<strong><?php echo Yii::t('order','Unpaid Invoice');?></strong> <span class="badge badge-warning"><?php echo $unpaidProvider->totalItemCount;?></span>
 				</a>
-			</li>
+			</li> */ ?>
 			<li class="">
 				<a data-toggle="tab" href="#refund-invoice">
 					<strong><?php echo Yii::t('order','Refund Invoice');?></strong> <span class="badge badge-warning"><?php echo $refundProvider->totalItemCount;?></span>
@@ -91,6 +93,7 @@ $('.search-form form').submit(function(){
 		)); ?>
 		</div><!-- search-form -->
 		<div class="tab-content pill-content">
+            <?php /*
 			<div id="paid-invoice" class="tab-pane">
 				<div class="table-responsive">
 				<?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -102,11 +105,11 @@ $('.search-form form').submit(function(){
 						array(
 							'value'=>'$this->grid->dataProvider->getPagination()->getOffset()+$row+1',
 						),
-						/*array(
+						array(
 							'name'=>'customer_id',
 							'type'=>'raw',
 							'value'=>'$data->customer_rel->name'
-						),*/
+						),
 						array(
 							'name'=>'serie',
 							'type'=>'raw',
@@ -164,11 +167,11 @@ $('.search-form form').submit(function(){
 						array(
 							'value'=>'$this->grid->dataProvider->getPagination()->getOffset()+$row+1',
 						),
-						/*array(
+						array(
 							'name'=>'customer_id',
 							'type'=>'raw',
 							'value'=>'$data->customer_rel->name'
-						),*/
+						),
 						array(
 							'name'=>'serie',
 							'type'=>'raw',
@@ -214,7 +217,7 @@ $('.search-form form').submit(function(){
 					),
 				)); ?>
 				</div>
-			</div>
+			</div> */ ?>
 			<div id="refund-invoice" class="tab-pane">
 				<div class="table-responsive">
 				<?php $this->widget('zii.widgets.grid.CGridView', array(
@@ -226,11 +229,6 @@ $('.search-form form').submit(function(){
 						array(
 							'value'=>'$this->grid->dataProvider->getPagination()->getOffset()+$row+1',
 						),
-						/*array(
-							'name'=>'customer_id',
-							'type'=>'raw',
-							'value'=>'$data->customer_rel->name'
-						),*/
 						array(
 							'name'=>'serie',
 							'type'=>'raw',
@@ -242,10 +240,25 @@ $('.search-form form').submit(function(){
 							'value'=>'PLookup::item(\'InvoiceStatus\',$data->status)'
 						),
 						array(
-							'header'=>'price',
+							'header'=>Yii::t('order', 'Total Invoice'),
 							'type'=>'raw',
 							'value'=>'number_format($data->totalPrice,0,\',\',\'.\')'
 						),
+                        array(
+                            'name'=>'customer_rel.name',
+                            'type'=>'raw',
+                            'value'=>'$data->customer_rel->name'
+                        ),
+                        array(
+                            'name'=>'customer_rel.telephone',
+                            'type'=>'raw',
+                            'value'=>'$data->customer_rel->telephone'
+                        ),
+                        array(
+                            'name'=>'customer_rel.address',
+                            'type'=>'raw',
+                            'value'=>'$data->customer_rel->address'
+                        ),
 						array(
 							'name'=>'date_entry',
 							'type'=>'raw',
@@ -288,11 +301,6 @@ $('.search-form form').submit(function(){
 						array(
 							'value'=>'$this->grid->dataProvider->getPagination()->getOffset()+$row+1',
 						),
-						/*array(
-							'name'=>'customer_id',
-							'type'=>'raw',
-							'value'=>'$data->customer_rel->name'
-						),*/
 						array(
 							'name'=>'serie',
 							'type'=>'raw',
@@ -304,10 +312,25 @@ $('.search-form form').submit(function(){
 							'value'=>'PLookup::item(\'InvoiceStatus\',$data->status)'
 						),
 						array(
-							'header'=>'price',
+							'header'=>Yii::t('order', 'Total Invoice'),
 							'type'=>'raw',
 							'value'=>'number_format($data->totalPrice,0,\',\',\'.\')'
 						),
+                        array(
+                            'name'=>'customer_rel.name',
+                            'type'=>'raw',
+                            'value'=>'$data->customer_rel->name'
+                        ),
+                        array(
+                            'name'=>'customer_rel.telephone',
+                            'type'=>'raw',
+                            'value'=>'$data->customer_rel->telephone'
+                        ),
+                        array(
+                            'name'=>'customer_rel.address',
+                            'type'=>'raw',
+                            'value'=>'$data->customer_rel->address'
+                        ),
 						array(
 							'name'=>'date_entry',
 							'type'=>'raw',
@@ -346,5 +369,9 @@ $('.search-form form').submit(function(){
 $('.stats').find('.btn').click(function(){
 	$('.nav-tabs').find('a[href="'+$(this).attr('href')+'"]').trigger('click');
 	return false;
+});
+$(function(){
+    $('.page-container').toggleClass('hidden-sidebar');
+    $('.sidebar').hide();
 });
 </script>

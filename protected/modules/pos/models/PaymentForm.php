@@ -9,6 +9,7 @@ class PaymentForm extends CFormModel
 	public $amount_tendered;
 	public $change;
 	public $type;
+	public $notes;
 
 	/**
 	 * Declares the validation rules.
@@ -19,7 +20,7 @@ class PaymentForm extends CFormModel
 	{
 		return array(
 			array('amount_tendered', 'required'),
-			array('change, type','safe'),
+			array('change, type, notes','safe'),
 		);
 	}
 
@@ -32,6 +33,7 @@ class PaymentForm extends CFormModel
 			'amount_tendered'=>Yii::t('order','Amount Tendered'),
 			'change'=>Yii::t('order','Change'),
 			'type'=>Yii::t('order','Order Type'),
+			'notes'=>Yii::t('order','Notes'),
 		);
 	}
 

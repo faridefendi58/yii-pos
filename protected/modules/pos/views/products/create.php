@@ -21,6 +21,6 @@ $this->menu=array(
 				<?php echo Yii::app()->user->getFlash('create'); ?>
 			</div>
 		<?php endif; ?>
-		<?php echo $this->renderPartial('_form', array('model'=>$model,'model2'=>$model2)); ?>
+		<?php echo $this->renderPartial('_form', array('model'=>$model,'model2'=>$model2, 'model3' => $model3)); ?>
 	</div>
 </div>

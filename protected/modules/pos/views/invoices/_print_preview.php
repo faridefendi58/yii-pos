@@ -17,7 +17,7 @@
 	<tr>
 		<td colspan="2">
 			<center>
-				<?php echo CHtml::image(Yii::app()->request->baseUrl.'/uploads/images/'.Yii::app()->config->get('struk_logo'),'',array('style'=>'width:100px;'));?>
+				<?php echo CHtml::image(Yii::app()->request->baseUrl.'/uploads/images/'.Yii::app()->config->get('struk_logo'),'',array('style'=>'max-width:200px;'));?>
 			</center>
 		</td>
 	</tr>

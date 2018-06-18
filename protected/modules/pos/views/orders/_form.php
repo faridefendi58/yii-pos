@@ -56,6 +56,10 @@
 					<label class="control-label">*) <?php echo CHtml::link(Yii::t('order','Use Promotion Code'),'javascript:void(0);',array('onclick'=>"js:$('.promocode').toggle();"));?></label>
 					<?php echo CHtml::textField('promocode',$promocode,array('class'=>'form-control promocode','placeholder'=>Yii::t('order','Please insert the promotion code'),'style'=>(Yii::app()->user->hasState('promocode'))?'display:block;':'display:none;')); ?>
 				</div>
+                <div class="form-group">
+                    <label class="control-label"><?php echo CHtml::link(Yii::t('order','Add Notes'),'javascript:void(0);',array('onclick'=>"js:$('.notes').toggle();"));?></label>
+                    <?php echo CHtml::textField('notes',null,array('class'=>'form-control notes','placeholder'=>Yii::t('order','Please insert the notes if needed'), 'style' => 'display:none;')); ?>
+                </div>
 			</div>
 			<div class="col-md-6 col-sm-12 text-right" id="payment-button" style="display:<?php echo (Yii::app()->user->hasState('items_belanja') && count(Yii::app()->user->getState('items_belanja'))>0)? 'block':'none';?>">
 				<?php echo CHtml::button(Yii::t('order','Payment'),array('onclick'=>'payRequest("'.Yii::app()->createUrl(Yii::app()->controller->module->id.'/orders/paymentRequest').'");','style'=>'min-width:100px;','id'=>'payment-btn','class'=>'btn btn-success', 'title'=>'Click "PgDn" for shortcut'));?>
@@ -467,49 +471,53 @@ function reloadCustomerList()
 </script>
 <script type="text/javascript">
 $(document).ready(function(){
-function setfocus(){
-    $("input[id=\'items_name\']").focus();
-}
+    function setfocus(){
+        $("input[id=\'items_name\']").focus();
+    }
 
-document.onkeydown = function(e){
-    //console.log(e.keyCode);
-setfocus();
-//alert(e.keyCode);
-if (e.keyCode==17){//--Tombol_CTRL---
-	 //$('#find-btn').click();
-	//listItems();
-	$("#list-item").find('button.selectpicker').click();
-}
-/*else if (e.keyCode==9){//--Tombol_TAB---
-	$('#payment-btn').click();
-}*/
-else if (e.keyCode==34){//--Tombol_PgDn---
-    $('#payment-btn').click();
-}
-/*else if (e.keyCode==18){//--Tombol_ALT---
-	$('#cancel-btn').click();
-}*/
-else if (e.keyCode==113){//--Tombol_F2---
-    $('#cancel-btn').click();
-}
-else if (e.keyCode==27){//--Tombol_ESC---
-	//$('#dialogItems').dialog('close');
-	$('button[data-dismiss="modal"]').trigger('click');
-	$('#cancel-btn').click();
-}
-else if (e.keyCode==36){//--Tombol_Home---
-	lookupCustomer();
-}
-else if (e.keyCode==45){//--Tombol_Ins---
-	createCustomer();
-}
-else if (e.keyCode==112){//--Tombol_F1---
-	$('#find-customer').toggle();
-	//$("input[id=\'find\']").focus();
-}
-else {
-	setfocus();
-	}
-}
+    document.onkeydown = function(e){
+        //console.log(e.keyCode);
+        setfocus();
+        //alert(e.keyCode);
+        if (e.keyCode==33){//--Tombol_PgUp---
+             //$('#find-btn').click();
+            //listItems();
+            $("#list-item").find('button.selectpicker').click();
+        }
+        /*else if (e.keyCode==9){//--Tombol_TAB---
+            $('#payment-btn').click();
+        }*/
+        else if (e.keyCode==34){//--Tombol_PgDn---
+            $('#payment-btn').click();
+        }
+        /*else if (e.keyCode==18){//--Tombol_ALT---
+            $('#cancel-btn').click();
+        }*/
+        else if (e.keyCode==113){//--Tombol_F2---
+            $('#cancel-btn').click();
+        }
+        else if (e.keyCode==27){//--Tombol_ESC---
+            //$('#dialogItems').dialog('close');
+            $('button[data-dismiss="modal"]').trigger('click');
+            $('#cancel-btn').click();
+        }
+        else if (e.keyCode==36){//--Tombol_Home---
+            lookupCustomer();
+        }
+        else if (e.keyCode==45){//--Tombol_Ins---
+            createCustomer();
+        }
+        else if (e.keyCode==112){//--Tombol_F1---
+            $('#find-customer').toggle();
+            //$("input[id=\'find\']").focus();
+        }
+        else {
+            setfocus();
+        }
+    }
+    // trigger the notes
+    $('input[id="notes"]').change(function () {
+        $("input[id='PaymentForm_notes']").val($(this).val());
+    });
 });
 </script>

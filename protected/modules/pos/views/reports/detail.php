@@ -21,8 +21,8 @@ $('.search-form form').submit(function(){
 <div class="panel panel-default row">
 	<div class="panel-heading">
 		<h4 class="panel-title">
-			<?php echo Yii::t('order','Transaction');?> - 
-			<?php echo Yii::t('global',date('l',strtotime($_GET['date'])));?>, 
+			<?php echo Yii::t('order','Transaction By Product');?> -
+			<?php echo Yii::t('global',date('l',strtotime($_GET['date'])));?>,
 			<?php echo date('d',strtotime($_GET['date']));?> 
 			<?php echo Yii::t('global',date('F',strtotime($_GET['date'])));?> 
 			<?php echo date('Y',strtotime($_GET['date']));?> 
@@ -52,7 +52,7 @@ $('.search-form form').submit(function(){
 							'htmlOptions'=>array('style'=>'text-align:left;'),
 						),
 						array(
-							'header'=>Yii::t('order','Price'),
+							'header'=>Yii::t('order','Price Per Item'),
 							'type'=>'raw',
 							'value'=>'number_format($data->price,0,\',\',\'.\')',
 							'htmlOptions'=>array('style'=>'text-align:right;'),

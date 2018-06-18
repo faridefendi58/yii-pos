@@ -8,14 +8,14 @@ $this->menu=array(
 	array('label'=>Yii::t('order','Create Sales'), 'url'=>array('orders/create'),'visible'=>RbacUserAccess::isChecked(Yii::app()->controller->module->id,'orders',Yii::app()->user->id,'create_p')),
 );
 
-Yii::app()->clientScript->registerScript('search', "
+/*Yii::app()->clientScript->registerScript('search', "
 $('.search-form form').submit(function(){
 	$.fn.yiiGridView.update('order-grid', {
 		data: $(this).serialize()
 	});
 	return false;
 });
-");
+");*/
 ?>
 <div class="col-sm-12">
 <div class="panel panel-default row">
@@ -42,22 +42,29 @@ $('.search-form form').submit(function(){
 							'type'=>'raw',
 							'value'=>'$data[\'date\']'
 						),
-						array(
+						/*array(
 							'name'=>Yii::t('order','Initial Capital'),
 							'type'=>'raw',
 							'value'=>'number_format(PaymentSession::getModal($data[\'date\']),0,\',\',\'.\')'
-						),
+						),*/
 						array(
-							'name'=>Yii::t('order','Number Of Sales'),
+							'name'=>Yii::t('order','Sold Item'),
 							'type'=>'raw',
-							'value'=>'$data[\'total_pembelian\']'
+							'value'=>'$data[\'total_pembelian\']',
+                            'htmlOptions'=>array('style'=>'text-align:center;'),
 						),
 						array(
 							'name'=>Yii::t('order','Total Income'),
 							'type'=>'raw',
 							'value'=>'number_format($data[\'total_pendapatan\'],0,\',\',\'.\')',
-							'htmlOptions'=>array('style'=>'text-align:left;'),
+							'htmlOptions'=>array('style'=>'text-align:right;'),
 						),
+                        array(
+                            'name'=>Yii::t('order','Net Margin'),
+                            'type'=>'raw',
+                            'value'=>'number_format($data[\'total_net_margin\'],0,\',\',\'.\')',
+                            'htmlOptions'=>array('style'=>'text-align:right;'),
+                        ),
 						array(
 							'class'=>'CButtonColumn',
 							'template'=>'{view}',
@@ -72,10 +79,26 @@ $('.search-form form').submit(function(){
 										),
 								),
 							'htmlOptions'=>array('style'=>'width:10%;','class'=>'table-action'),
-						),
+						)
 					),
 				)); ?>
 		</div>
+        <div class="col-md-6 pull-right">
+            <table class="table table-striped">
+                <tr>
+                    <td><b><?php echo Yii::t('order','Sum Of Sold Item'); ?></b></td>
+                    <td><?php echo $sum_of_total_pembelian; ?></td>
+                </tr>
+                <tr>
+                    <td><b><?php echo Yii::t('order','Sum Of Total Income'); ?></b></td>
+                    <td>Rp. <?php echo number_format($sum_of_total_pendapatan, 0, ',', '.'); ?></td>
+                </tr>
+                <tr>
+                    <td><b><?php echo Yii::t('order','Sum Of Net Margin'); ?></b></td>
+                    <td>Rp. <?php echo number_format($sum_of_total_net_margin, 0, ',', '.'); ?></td>
+                </tr>
+            </table>
+        </div>
 	</div>
 </div>
 </div>
