@@ -67,6 +67,11 @@ return array(
 	'Add Notes' => 'Tambahkan Catatan',
 	'Please insert the notes if needed' => 'Silakan berikan catatan jika diperlukan',
 	'Notes' => 'Catatan',
-	'Product Discount' => 'Harga Diskon'
+	'Product Discount' => 'Harga Diskon',
+	'Total Price' => 'Total Harga',
+	'Total Invoice' => 'Total Tagihan',
+	'All Invoice' => 'Semua Tagihan',
+	'Refund Invoice' => 'Tagihan Refund',
+	'Invoices' => 'Tagihan'
 );
 ?>
