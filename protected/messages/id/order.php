@@ -65,6 +65,8 @@ return array(
 	'Sum Of Net Margin' => 'Total Laba Bersih',
 	'Sum Of Sold Item' => 'Jumlah Total Item Terjual',
 	'Add Notes' => 'Tambahkan Catatan',
-	'Please insert the notes if needed' => 'Silakan berikan catatan jika diperlukan'
+	'Please insert the notes if needed' => 'Silakan berikan catatan jika diperlukan',
+	'Notes' => 'Catatan',
+	'Product Discount' => 'Harga Diskon'
 );
 ?>

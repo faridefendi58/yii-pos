@@ -78,11 +78,12 @@ class ProductDiscount extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'product_id' => 'Item',
-			'customer_group_id' => 'Customer Group',
-			'quantity' => 'Quantity',
-			'price' => 'Price',
-			'date_start' => 'Date Start',
-			'date_end' => 'Date End',
+			'customer_group_id' => Yii::t('product', 'Customer Group'),
+			'quantity' => Yii::t('product', 'Quantity'),
+			'price' => Yii::t('product', 'Price'),
+			'date_start' => Yii::t('product', 'Date Start'),
+			'date_end' => Yii::t('product', 'Date End'),
+			'base_price' => Yii::t('product', 'Base Price'),
 		);
 	}
 

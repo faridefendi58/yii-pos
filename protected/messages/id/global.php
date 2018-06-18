@@ -51,5 +51,6 @@ return array(
 	'December'=>'Desember',
 	'Thank you for contacting us. We will respond to you as soon as possible.'=>'Terimakasih pesan Anda telah Kami terima.',
 	'Dashboard'=>'Beranda',
+	'Are you sure you want to delete this?' => 'Anda yakin ingin menghapus item ini?'
 );
 ?>

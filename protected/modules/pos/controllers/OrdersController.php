@@ -307,6 +307,9 @@ class OrdersController extends EController
                     );
                     $model2->currency_id = Yii::app()->user->getState('currency');
                     $model2->change_value = Currency::getChangeValue($model2->currency_id);
+                    if (!empty($_POST['PaymentForm']['notes'])) {
+                        $model2->notes = $_POST['PaymentForm']['notes'];
+                    }
                     $model2->date_entry = date(c);
                     $model2->user_entry = Yii::app()->user->id;
                     if ($model2->save()) {
@@ -734,6 +737,9 @@ class OrdersController extends EController
                     );
                     $model2->currency_id = Yii::app()->user->getState('currency');
                     $model2->change_value = Currency::getChangeValue($model2->currency_id);
+                    if (!empty($_POST['PaymentForm']['notes'])) {
+                        $model2->notes = $_POST['PaymentForm']['notes'];
+                    }
                     $model2->date_update = date(c);
                     $model2->user_update = Yii::app()->user->id;
                     if ($model2->save()) {

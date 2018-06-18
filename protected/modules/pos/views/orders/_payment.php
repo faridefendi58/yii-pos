@@ -17,6 +17,8 @@
 
 	<div class="form-group mar_top1" id="change"></div>
 
+    <?php echo $form->hiddenField($model, 'notes'); ?>
+
 	<div class="form-group submit mar_top1" id="submit-payment-area" style="display:none;">
 		<div class="col-sm-12">
 		<?php echo CHtml::button(Yii::t('order', 'Save Transaction'),array('id'=>'payment-btn-help','class'=>'btn btn-info'));?>							
