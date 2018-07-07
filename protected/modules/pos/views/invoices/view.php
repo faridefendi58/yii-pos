@@ -51,7 +51,7 @@ $('.search-form form').submit(function(){
 	</li>
     */ ?>
 	<li class="col-xs-3">
-		<a class="btn btn-default" href="#refund-invoice"><?php echo $unpaidProvider->totalItemCount;?></a>
+		<a class="btn btn-default" href="#refund-invoice"><?php echo $refundProvider->totalItemCount;?></a>
 		<span><?php echo Yii::t('order','Refund Invoice');?></span>
 	</li>
 	<li class="col-xs-3">
@@ -87,10 +87,12 @@ $('.search-form form').submit(function(){
 				</a>
 			</li>
 		</ul>
-		<div class="search-form  col-sm-12 mar_top2" style="display:none">
-		<?php $this->renderPartial('_search',array(
-			'model'=>$dataProvider->model,
-		)); ?>
+		<div class="search-form col-sm-12 mar_top3" style="display:block;margin-top: 20px;">
+            <div class="row">
+                <?php $this->renderPartial('_search',array(
+                    'model'=>$dataProvider->model,
+                )); ?>
+            </div>
 		</div><!-- search-form -->
 		<div class="tab-content pill-content">
             <?php /*
@@ -316,6 +318,16 @@ $('.search-form form').submit(function(){
 							'type'=>'raw',
 							'value'=>'number_format($data->totalPrice,0,\',\',\'.\')'
 						),
+                        array(
+                            'header'=>Yii::t('order', 'Cost'),
+                            'type'=>'raw',
+                            'value'=>'number_format($data->totalCost,0,\',\',\'.\')'
+                        ),
+                        array(
+                            'header'=>Yii::t('order', 'Net Profit'),
+                            'type'=>'raw',
+                            'value'=>'number_format($data->netProfit,0,\',\',\'.\')'
+                        ),
                         array(
                             'name'=>'customer_rel.name',
                             'type'=>'raw',

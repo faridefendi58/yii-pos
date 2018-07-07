@@ -60,10 +60,13 @@ class InvoicesController extends EController
 
 	public function actionView()
 	{
-		$criteria1=new CDbCriteria;
-		$criteria2=new CDbCriteria;
-		$criteria3=new CDbCriteria;
-		$criteria4=new CDbCriteria;
+		$criteria1 = new CDbCriteria;
+		$criteria2 = new CDbCriteria;
+		$criteria3 = new CDbCriteria;
+		$criteria4 = new CDbCriteria;
+
+		$default_range = 'this_month';
+
 		if(isset($_GET['Invoice'])){
 			$criteria1->compare('customer_id',$_GET['Invoice']['customer_id']);
 			$criteria1->compare('id',$_GET['Invoice']['id']);
@@ -77,17 +80,61 @@ class InvoicesController extends EController
 			$criteria4->compare('customer_id',$_GET['Invoice']['customer_id']);
 			$criteria4->compare('id',$_GET['Invoice']['id']);
 			$criteria4->addBetweenCondition('DATE_FORMAT(date_entry,"%Y-%m-%d")',$_GET['Invoice']['date_from'],$_GET['Invoice']['date_to'],'AND');
-		}
-		$criteria1->order='date_entry DESC';
-		$dataProvider=new CActiveDataProvider('Invoice',array('criteria'=>$criteria1));
 
-		$criteria2->compare('status',0);
+			if (isset($_GET['Invoice']['range'])) {
+                $default_range = $_GET['Invoice']['range'];
+			    switch ($_GET['Invoice']['range']) {
+                    case "today":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m-%d")', array(date("Y-m-d")), 'AND');
+                        $criteria4->addInCondition('DATE_FORMAT(date_entry, "%Y-%m-%d")', array(date("Y-m-d")), 'AND');
+                        break;
+                    case "this_week":
+                        $criteria1->addBetweenCondition(
+                            'DATE_FORMAT(date_entry,"%Y-%m-%d")',
+                            date( 'Y-m-d', strtotime( 'monday this week' ) ),
+                            date( 'Y-m-d', strtotime( 'sunday this week' ) ),
+                            'AND'
+                        );
+                        $criteria4->addBetweenCondition(
+                            'DATE_FORMAT(date_entry,"%Y-%m-%d")',
+                            date( 'Y-m-d', strtotime( 'monday this week' ) ),
+                            date( 'Y-m-d', strtotime( 'sunday this week' ) ),
+                            'AND'
+                        );
+                        break;
+                    case "this_month":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+                        $criteria4->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+                        break;
+                    case "last_month":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date('Y-m', strtotime(date('Y-m')." -1 month"))), 'AND');
+                        $criteria4->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date('Y-m', strtotime(date('Y-m')." -1 month"))), 'AND');
+                        break;
+                    case "this_year":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y")', array(date("Y")), 'AND');
+                        $criteria4->addInCondition('DATE_FORMAT(date_entry, "%Y")', array(date("Y")), 'AND');
+                        break;
+                }
+            }
+		} else {
+            $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+            $criteria4->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+        }
+
+		$criteria1->order = 'date_entry DESC';
+		$dataProvider = new CActiveDataProvider('Invoice',array('criteria'=>$criteria1));
+        $dataProvider->model->range = $default_range;
+
+		/*$criteria2->compare('status',0);
 		$criteria2->order='date_entry DESC';
 		$unpaidProvider=new CActiveDataProvider('Invoice',array('criteria'=>$criteria2));
 
 		$criteria3->compare('status',1);
 		$criteria3->order='date_entry DESC';
-		$paidProvider=new CActiveDataProvider('Invoice',array('criteria'=>$criteria3));
+		$paidProvider=new CActiveDataProvider('Invoice',array('criteria'=>$criteria3));*/
+
+        $unpaidProvider = null;
+        $paidProvider = null;
 
 		$criteria4->compare('status',2);
 		$criteria4->order='date_entry DESC';

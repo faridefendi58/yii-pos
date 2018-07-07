@@ -589,37 +589,54 @@ class OrdersController extends EController
     {
         $this->layout = 'column2';
         $criteria1 = new CDbCriteria;
-        $criteria2 = new CDbCriteria;
-        $criteria3 = new CDbCriteria;
+
+        $default_range = 'this_month';
+
         if (isset($_GET['Order'])) {
             $criteria1->compare('customer_id', $_GET['Order']['customer_id']);
             $criteria1->compare('id', $_GET['Order']['id']);
             $criteria1->addBetweenCondition('DATE_FORMAT(date_entry,"%Y-%m-%d")', $_GET['Order']['date_from'], $_GET['Order']['date_to'], 'AND');
-            $criteria2->compare('customer_id', $_GET['Order']['customer_id']);
-            $criteria2->compare('id', $_GET['Order']['id']);
-            $criteria2->addBetweenCondition('DATE_FORMAT(date_entry,"%Y-%m-%d")', $_GET['Order']['date_from'], $_GET['Order']['date_to'], 'AND');
-            $criteria3->compare('customer_id', $_GET['Order']['customer_id']);
-            $criteria3->compare('id', $_GET['Order']['id']);
-            $criteria3->addBetweenCondition('DATE_FORMAT(date_entry,"%Y-%m-%d")', $_GET['Order']['date_from'], $_GET['Order']['date_to'], 'AND');
+
+            if (isset($_GET['Order']['range'])) {
+                $default_range = $_GET['Order']['range'];
+                switch ($_GET['Order']['range']) {
+                    case "today":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m-%d")', array(date("Y-m-d")), 'AND');
+                        break;
+                    case "this_week":
+                        $criteria1->addBetweenCondition(
+                            'DATE_FORMAT(date_entry,"%Y-%m-%d")',
+                            date( 'Y-m-d', strtotime( 'monday this week' ) ),
+                            date( 'Y-m-d', strtotime( 'sunday this week' ) ),
+                            'AND'
+                        );
+                        break;
+                    case "this_month":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+                        break;
+                    case "last_month":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date('Y-m', strtotime(date('Y-m')." -1 month"))), 'AND');
+                        break;
+                    case "this_year":
+                        $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y")', array(date("Y")), 'AND');
+                        break;
+                }
+            }
+        } else {
+            $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
         }
 
         $criteria1->order = 'date_entry DESC';
-        $dataProvider = new CActiveDataProvider('Order', array('criteria' => $criteria1));
-
-        $criteria2 = new CDbCriteria;
-        $criteria2->compare('type', 0);
-        $criteria2->order = 'date_entry DESC';
-        $creditProvider = new CActiveDataProvider('Order', array('criteria' => $criteria2));
-
-        $criteria3 = new CDbCriteria;
-        $criteria3->compare('type', 1);
-        $criteria3->order = 'date_entry DESC';
-        $cashProvider = new CActiveDataProvider('Order', array('criteria' => $criteria3));
+        $dataProvider = new CActiveDataProvider(
+            'Order',
+            array(
+                'criteria' => $criteria1,
+                'pagination' => array('pageSize' => 100)
+            ));
+        $dataProvider->model->range = $default_range;
 
         $this->render('view', array(
-            'dataProvider' => $dataProvider,
-            'creditProvider' => $creditProvider,
-            'cashProvider' => $cashProvider
+            'dataProvider' => $dataProvider
         ));
     }
 

@@ -21,6 +21,7 @@ class Invoice extends CActiveRecord
 {
 	public $date_from;
 	public $date_to;
+	public $range;
 
 	/**
 	 * @return string the associated database table name
@@ -51,7 +52,7 @@ class Invoice extends CActiveRecord
 			array('refund', 'numerical'),
 			array('serie, status', 'length', 'max'=>50),
 			array('cash, notes, paid_at, date_update', 'safe'),
-			array('config, date_from, date_to, currency_id, change_value', 'safe'),
+			array('config, date_from, date_to, currency_id, change_value, range', 'safe'),
 			array('nr','check_serie_nr','on'=>'create'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -95,6 +96,7 @@ class Invoice extends CActiveRecord
 			'user_update' => Yii::t('global','User Update'),
 			'date_from' => Yii::t('invoice','Period From'),
 			'date_to' => Yii::t('invoice','Period To'),
+			'range' => Yii::t('invoice','Range'),
 		);
 	}
 
@@ -246,4 +248,26 @@ class Invoice extends CActiveRecord
 		}
 		return $items;
 	}
+
+    public function getTotalCost($id=0)
+    {
+        if ($id == 0)
+            $id = $this->id;
+
+        $query = 'SELECT SUM(cost_price*quantity) AS amount FROM tbl_order WHERE invoice_id='.$id.'';
+        $rows = Yii::app()->db2->createCommand($query)->queryAll();
+
+        return $rows[0]['amount'];
+    }
+
+    public function getNetProfit($id=0)
+    {
+        if ($id == 0)
+            $id = $this->id;
+
+        $query = 'SELECT SUM((price - cost_price)*quantity) AS amount FROM tbl_order WHERE invoice_id='.$id.'';
+        $rows = Yii::app()->db2->createCommand($query)->queryAll();
+
+        return $rows[0]['amount'];
+    }
 }

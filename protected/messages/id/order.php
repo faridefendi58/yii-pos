@@ -72,6 +72,13 @@ return array(
 	'Total Invoice' => 'Total Tagihan',
 	'All Invoice' => 'Semua Tagihan',
 	'Refund Invoice' => 'Tagihan Refund',
-	'Invoices' => 'Tagihan'
+	'Invoices' => 'Tagihan',
+	'Net Profit' => 'Laba Bersih',
+	'Cost' => 'Biaya',
+	'All Order' => 'Semua Order',
+	'Customer' => 'Pelanggan',
+	'Date Interval' => 'Interval Tanggal',
+	'Range' => 'Rentang',
+	'All Customer' => 'Semua Pelanggan'
 );
 ?>

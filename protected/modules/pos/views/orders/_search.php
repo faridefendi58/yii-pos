@@ -3,7 +3,7 @@
 	'method'=>'get',
 )); ?>
 
-	<div class="form-group col-md-2">
+	<div class="form-group col-md-2 hide">
 		<?php echo $form->label($model,'id',array('class'=>'control-label')); ?>
 		<?php echo $form->textField($model,'id',array('class'=>'form-control')); ?>
 	</div>
@@ -65,8 +65,26 @@
 		</div>
 	</div>
 
-	<div class="form-group col-md-12">
-		<?php echo CHtml::submitButton('Search',array('class'=>'btn btn-success','style'=>'min-width:120px;')); ?>
+    <div class="form-group col-md-2">
+        <label class="control-label"><?php echo Yii::t("order", "Range"); ?></label>
+        <?php echo $form->dropDownList(
+            $model,
+            'range',
+            array(
+                '' => 'Semua',
+                'today' => 'Hari Ini',
+                'this_week' => 'Minggu Ini',
+                'this_month' => 'Bulan Ini',
+                'last_month' => 'Bulan Lalu',
+                'this_year' => 'Tahun Ini'
+            ),
+            array('class'=>'form-control')
+        ); ?>
+    </div>
+
+	<div class="form-group col-md-2">
+        <label class="control-label col-sm-12">&nbsp;</label>
+		<?php echo CHtml::submitButton(Yii::t('global', 'Search'), array('class'=>'btn btn-success','style'=>'min-width:120px;')); ?>
 	</div>
 
 <?php $this->endWidget(); ?>
