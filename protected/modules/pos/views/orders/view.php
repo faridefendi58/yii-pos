@@ -26,10 +26,10 @@ $('.search-form form').submit(function(){
 	$.fn.yiiGridView.update('all-grid', {
 		data: $(this).serialize()
 	});
-	$.fn.yiiGridView.update('cash-grid', {
+	$.fn.yiiGridView.update('product-grid', {
 		data: $(this).serialize()
 	});
-	$.fn.yiiGridView.update('credit-grid', {
+	$.fn.yiiGridView.update('customer-grid', {
 		data: $(this).serialize()
 	});
 	return false;
@@ -39,7 +39,7 @@ $('.search-form form').submit(function(){
 <ul class="row stats">
 	<li class="col-xs-6">
 		<a class="btn btn-default" href="#all-list"><?php echo $dataProvider->totalItemCount;?></a>
-		<span><?php echo Yii::t('order','All Order');?></span>
+		<span><?php echo Yii::t('order','Order on this month');?></span>
 	</li>
 </ul>
 <div class="panel panel-default">
@@ -156,7 +156,116 @@ $('.search-form form').submit(function(){
 				</div>
 			</div>
             <div id="product-order" class="tab-pane">
+                <div class="table-responsive">
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'dataProvider' => $productProvider,
+                        'itemsCssClass' => 'table table-striped mb30',
+                        'id' => 'product-grid',
+                        'afterAjaxUpdate' => 'reloadGrid',
+                        'columns' => array(
+                            array(
+                                'value' => '$this->grid->dataProvider->getPagination()->getOffset()+$row+1',
+                            ),
+                            array(
+                                'name' => 'title',
+                                'header' => Yii::t('order', 'Product Name'),
+                                'type' => 'raw',
+                                'value' => $data['title'],
+                                'footer' => 'TOTAL',
+                                'footerHtmlOptions' => array('style'=>'text-align:center;font-weight:bold;'),
+                            ),
+                            array(
+                                'name' => 'quantity',
+                                'header' => Yii::t('order', 'Quantity'),
+                                'type' => 'raw',
+                                'value' => $data['quantity'],
+                                'footer' => $productTotal['quantity'],
+                                'htmlOptions' => array('style'=>'text-align:center;'),
+                                'footerHtmlOptions' => array('style'=>'text-align:center;font-weight:bold;'),
+                            ),
+                            array(
+                                'name' => 'tot_price',
+                                'header' => Yii::t('order', 'Bruto Income'),
+                                'type' => 'raw',
+                                'value' => 'number_format($data[\'tot_price\'], 0, \',\', \'.\')',
+                                'footer' => number_format($productTotal['tot_price'], 0, ',', '.'),
+                                'htmlOptions' => array('style'=>'text-align:right;'),
+                                'footerHtmlOptions' => array('style'=>'text-align:right;font-weight:bold;'),
+                            ),
+                            array(
+                                'name' => 'tot_cost',
+                                'header' => Yii::t('order', 'Total Cost'),
+                                'type' => 'raw',
+                                'value' => 'number_format($data[\'tot_cost\'], 0, \',\', \'.\')',
+                                'footer' => number_format($productTotal['tot_cost'], 0, ',', '.'),
+                                'htmlOptions' => array('style'=>'text-align:right;'),
+                                'footerHtmlOptions' => array('style'=>'text-align:right;font-weight:bold;'),
+                            ),
+                            array(
+                                'name' => 'net_income',
+                                'header' => Yii::t('order', 'Net Income'),
+                                'type' => 'raw',
+                                'value' => 'number_format($data[\'net_income\'], 0, \',\', \'.\')',
+                                'footer' => number_format($productTotal['net_income'], 0, ',', '.'),
+                                'htmlOptions' => array('style'=>'text-align:right;'),
+                                'footerHtmlOptions' => array('style'=>'text-align:right;font-weight:bold;'),
+                            ),
+                            array(
+                                'name' => 'average_cost_price',
+                                'header' => Yii::t('order', 'Average Cost Price'),
+                                'type' => 'raw',
+                                'value' => 'number_format($data[\'average_cost_price\'], 0, \',\', \'.\')',
+                                'footer' => number_format($productTotal['average_cost_price'], 0, ',', '.'),
+                                'htmlOptions' => array('style'=>'text-align:right;'),
+                                'footerHtmlOptions' => array('style'=>'text-align:right;font-weight:bold;'),
+                            )
+                        ),
+                    )); ?>
+                </div>
             </div>
+            <!-- customer order -->
+            <div id="customer-order" class="tab-pane">
+                <div class="table-responsive">
+                    <?php $this->widget('zii.widgets.grid.CGridView', array(
+                        'dataProvider' => $customerProvider,
+                        'itemsCssClass' => 'table table-striped mb30',
+                        'id' => 'customer-grid',
+                        'afterAjaxUpdate' => 'reloadGrid',
+                        'columns' => array(
+                            array(
+                                'value' => '$this->grid->dataProvider->getPagination()->getOffset()+$row+1',
+                            ),
+                            array(
+                                'name' => 'customer_name',
+                                'header' => Yii::t('order', 'Customer Name'),
+                                'type' => 'raw',
+                                'value' => $data['customer_name'],
+                            ),
+                            array(
+                                'name' => 'customer_address',
+                                'header' => Yii::t('order', 'Customer Address'),
+                                'type' => 'raw',
+                                'value' => $data['customer_address'],
+                            ),
+                            array(
+                                'name' => 'total_quantity',
+                                'header' => Yii::t('order', 'Sum Of Product Order'),
+                                'type' => 'raw',
+                                'value' => $data['total_quantity'],
+                                'htmlOptions' => array('style' => 'text-align:center;')
+                            ),
+                            array(
+                                'name' => 'total_price',
+                                'header' => Yii::t('order', 'Amount Of Order'),
+                                'type' => 'raw',
+                                'value' => 'number_format($data[\'total_price\'], 0, \',\', \'.\')',
+                                'htmlOptions' => array('style' => 'text-align:right;')
+                            ),
+                        ),
+                    )); ?>
+                </div>
+            </div>
+            <!-- endof customer order -->
 		</div>
 	</div>
 </div>

@@ -79,6 +79,15 @@ return array(
 	'Customer' => 'Pelanggan',
 	'Date Interval' => 'Interval Tanggal',
 	'Range' => 'Rentang',
-	'All Customer' => 'Semua Pelanggan'
+	'All Customer' => 'Semua Pelanggan',
+	'Average Cost Price' => 'Cost Per Produk',
+	'Bruto Income' => 'Pendapatan Kotor',
+	'Net Income' => 'Pendapatan Bersih',
+	'Product Name' => 'Nama Produk',
+	'Order on this month' => 'Order di bulan ini',
+	'Product Order' => 'Order Produk',
+	'Customer Order' => 'Order Pelanggan',
+	'Sum Of Product Order' => 'Jumlah Produk Diorder',
+	'Amount Of Order' => 'Total Pembelian'
 );
 ?>

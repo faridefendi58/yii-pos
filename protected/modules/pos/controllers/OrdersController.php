@@ -590,18 +590,41 @@ class OrdersController extends EController
         $this->layout = 'column2';
         $criteria1 = new CDbCriteria;
 
+        // for product tab
+        $sql = 'SELECT t.title, SUM(t.quantity) AS quantity, SUM(t.price*t.quantity) AS tot_price, 
+            AVG (t.cost_price) AS average_cost_price, t.date_entry AS last_ordered, 
+             SUM((t.price-t.cost_price)*t.quantity) AS net_income, 
+             SUM(t.cost_price*t.quantity) AS tot_cost 
+            FROM tbl_order t 
+            WHERE 1';
+
         $default_range = 'this_month';
+
+        // for customer tab
+        $sql3 = 'SELECT c.name AS customer_name, c.address AS customer_address, 
+            SUM(t.quantity) AS total_quantity, 
+            SUM(t.price*t.quantity) AS total_price     
+            FROM tbl_order t 
+            LEFT JOIN tbl_customer c ON c.id = t.customer_id 
+            WHERE 1';
 
         if (isset($_GET['Order'])) {
             $criteria1->compare('customer_id', $_GET['Order']['customer_id']);
             $criteria1->compare('id', $_GET['Order']['id']);
-            $criteria1->addBetweenCondition('DATE_FORMAT(date_entry,"%Y-%m-%d")', $_GET['Order']['date_from'], $_GET['Order']['date_to'], 'AND');
+
+            if (!empty($_GET['Order']['date_from']) && !empty($_GET['Order']['date_to'])) {
+                $criteria1->addBetweenCondition('DATE_FORMAT(date_entry,"%Y-%m-%d")', $_GET['Order']['date_from'], $_GET['Order']['date_to'], 'AND');
+                $sql .= ' AND DATE_FORMAT(t.date_entry,"%Y-%m-%d") BETWEEN "'.$_GET['Order']['date_from'].'" AND "'.$_GET['Order']['date_to'].'"';
+                $default_range = null;
+            }
 
             if (isset($_GET['Order']['range'])) {
                 $default_range = $_GET['Order']['range'];
                 switch ($_GET['Order']['range']) {
                     case "today":
                         $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m-%d")', array(date("Y-m-d")), 'AND');
+                        $sql .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m-%d") = "'.date("Y-m-d").'"';
+                        $sql3 .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m-%d") = "'.date("Y-m-d").'"';
                         break;
                     case "this_week":
                         $criteria1->addBetweenCondition(
@@ -610,20 +633,50 @@ class OrdersController extends EController
                             date( 'Y-m-d', strtotime( 'sunday this week' ) ),
                             'AND'
                         );
+                        $sql .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m-%d") 
+                            BETWEEN "'.date( 'Y-m-d', strtotime( 'monday this week' ) ).'" 
+                            AND "'.date( 'Y-m-d', strtotime( 'sunday this week' ) ).'"';
+                        $sql3 .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m-%d") 
+                            BETWEEN "'.date( 'Y-m-d', strtotime( 'monday this week' ) ).'" 
+                            AND "'.date( 'Y-m-d', strtotime( 'sunday this week' ) ).'"';
+                        break;
+                    case "last_week":
+                        $criteria1->addBetweenCondition(
+                            'DATE_FORMAT(date_entry,"%Y-%m-%d")',
+                            date( 'Y-m-d', strtotime( 'last week monday' ) ),
+                            date( 'Y-m-d', strtotime( 'last week sunday' ) ),
+                            'AND'
+                        );
+                        $sql .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m-%d") 
+                            BETWEEN "'.date( 'Y-m-d', strtotime( 'last week monday' ) ).'" 
+                            AND "'.date( 'Y-m-d', strtotime( 'last week sunday' ) ).'"';
+                        $sql3 .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m-%d") 
+                            BETWEEN "'.date( 'Y-m-d', strtotime( 'last week monday' ) ).'" 
+                            AND "'.date( 'Y-m-d', strtotime( 'last week sunday' ) ).'"';
                         break;
                     case "this_month":
                         $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+                        $sql .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m") = "'.date("Y-m").'"';
+                        $sql3 .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m") = "'.date("Y-m").'"';
                         break;
                     case "last_month":
                         $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date('Y-m', strtotime(date('Y-m')." -1 month"))), 'AND');
+                        $sql .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m") = "'.date('Y-m', strtotime(date('Y-m')." -1 month")).'"';
+                        $sql3 .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m") = "'.date('Y-m', strtotime(date('Y-m')." -1 month")).'"';
                         break;
                     case "this_year":
                         $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y")', array(date("Y")), 'AND');
+                        $sql .= ' AND DATE_FORMAT(t.date_entry, "%Y") = "'.date('Y').'"';
+                        $sql3 .= ' AND DATE_FORMAT(t.date_entry, "%Y") = "'.date('Y').'"';
                         break;
                 }
             }
         } else {
-            $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+            if (!empty($default_range)) {
+                $criteria1->addInCondition('DATE_FORMAT(date_entry, "%Y-%m")', array(date("Y-m")), 'AND');
+                $sql .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m") = "'.date("Y-m").'"';
+                $sql3 .= ' AND DATE_FORMAT(t.date_entry, "%Y-%m") = "'.date("Y-m").'"';
+            }
         }
 
         $criteria1->order = 'date_entry DESC';
@@ -635,8 +688,41 @@ class OrdersController extends EController
             ));
         $dataProvider->model->range = $default_range;
 
+        $sql .= ' GROUP BY t.product_id ORDER BY quantity DESC';
+
+        $productData = Yii::app()->db2->createCommand( $sql )->queryAll();
+
+        $sql2 = 'SELECT SUM(product_query.quantity) AS quantity,
+          SUM(product_query.tot_price) AS tot_price,
+          SUM(product_query.average_cost_price) AS average_cost_price,
+          SUM(product_query.net_income) AS net_income, 
+          SUM(product_query.tot_cost) AS tot_cost
+          FROM ('.$sql.') AS product_query';
+
+        $productTotal = Yii::app()->db2->createCommand( $sql2 )->queryRow();
+
+        $productProvider = new CArrayDataProvider($productData, array(
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+
+        // for customer provider
+        $sql3 .= ' GROUP BY t.customer_id ORDER BY total_price DESC';
+
+        $customerData = Yii::app()->db2->createCommand( $sql3 )->queryAll();
+
+        $customerProvider = new CArrayDataProvider($customerData, array(
+            'pagination' => array(
+                'pageSize' => 10,
+            ),
+        ));
+
         $this->render('view', array(
-            'dataProvider' => $dataProvider
+            'dataProvider' => $dataProvider,
+            'productProvider' => $productProvider,
+            'productTotal' => $productTotal,
+            'customerProvider' => $customerProvider
         ));
     }
 

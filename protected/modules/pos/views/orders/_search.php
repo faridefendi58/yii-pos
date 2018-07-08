@@ -38,7 +38,7 @@
 						'constrainInput' => 'false'
 					),
 					'htmlOptions'=>array(
-						'class'=>'form-control',
+						'class'=>'form-control interval-date',
 						'placeholder'=>'Date From',
 					),
 				));
@@ -57,7 +57,7 @@
 						'constrainInput' => 'false'
 					),
 					'htmlOptions'=>array(
-						'class'=>'form-control',
+						'class'=>'form-control interval-date',
 						'placeholder'=>'Date To',
 					),
 				));
@@ -73,12 +73,13 @@
             array(
                 '' => 'Semua',
                 'today' => 'Hari Ini',
+                'last_week' => 'Minggu Lalu',
                 'this_week' => 'Minggu Ini',
                 'this_month' => 'Bulan Ini',
                 'last_month' => 'Bulan Lalu',
                 'this_year' => 'Tahun Ini'
             ),
-            array('class'=>'form-control')
+            array('class'=>'form-control', 'onchange' => 'filterRage(this.value);')
         ); ?>
     </div>
 
@@ -88,3 +89,15 @@
 	</div>
 
 <?php $this->endWidget(); ?>
+<script type="text/javascript">
+    function filterRage(the_value) {
+        if (the_value.length > 0) {
+            $('input.interval-date').val("");
+        }
+    }
+    $(function () {
+        $('input.interval-date').change(function () {
+            $('select[id="Order_range"]').val("");
+        });
+    })
+</script>
