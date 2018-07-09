@@ -26,6 +26,8 @@ class Order extends CActiveRecord
 {
 	public $date_from;
 	public $date_to;
+	public $range;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -56,7 +58,7 @@ class Order extends CActiveRecord
 			array('product_id, promo_id, quantity', 'length', 'max'=>20),
 			array('group_id, title', 'length', 'max'=>255),
 			array('notes, date_update', 'safe'),
-			array('date_from, date_to, cost_price', 'safe'),
+			array('date_from, date_to, cost_price, range', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, customer_id, product_id, promo_id, group_id, group_master, title, invoice_id, quantity, price, discount, status, notes, date_entry, user_entry, date_update, user_update', 'safe', 'on'=>'search'),
@@ -101,6 +103,7 @@ class Order extends CActiveRecord
 			'user_entry' => Yii::t('global','User Entry'),
 			'date_update' => Yii::t('global','Date Update'),
 			'user_update' => Yii::t('global','User Update'),
+            'range' => Yii::t('invoice','Range'),
 		);
 	}
 

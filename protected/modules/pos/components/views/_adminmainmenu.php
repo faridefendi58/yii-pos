@@ -37,6 +37,15 @@
 				'linkOptions'=>array('class'=>'expand'),
 				'visible'=>RbacUserAccess::isChecked(Yii::app()->controller->module->id,'promos',Yii::app()->user->id,'read_p')
 			),
+            array('label'=>'<i class="fa fa-users"></i> <span>'.Yii::t('customer','Customer').'</span><b class="arrow icon-angle-down"></b>', 'url'=>'#',
+                'items'=>array(
+                    array('label'=>'<i class="fa fa-caret-right"></i> '.Yii::t('customer','Overview'), 'url'=>array('/'.Yii::app()->controller->module->id.'/customers/view'),'visible'=>RbacUserAccess::isChecked(Yii::app()->controller->module->id,'customers',Yii::app()->user->id,'read_p')),
+                    array('label'=>'<i class="fa fa-caret-right"></i> '.Yii::t('global','Create').' '.Yii::t('customer','Customer'), 'url'=>array('/'.Yii::app()->controller->module->id.'/customers/create'),'visible'=>RbacUserAccess::isChecked(Yii::app()->controller->module->id,'promos',Yii::app()->user->id,'create_p')),
+                ),
+                'itemOptions'=>array('class'=>'nav-parent'),
+                'linkOptions'=>array('class'=>'expand'),
+                'visible'=>RbacUserAccess::isChecked(Yii::app()->controller->module->id,'customer',Yii::app()->user->id,'read_p')
+            ),
 			array('label'=>'<i class="fa fa-bar-chart-o"></i> <span>'.Yii::t('order','Statistic').'</span><b class="arrow icon-angle-down"></b>', 'url'=>'#', 
 				'items'=>array(
 					array('label'=>'<i class="fa fa-caret-right"></i> '.Yii::t('order','Income'), 'url'=>array('/'.Yii::app()->controller->module->id.'/reports/view'),'visible'=>RbacUserAccess::isChecked(Yii::app()->controller->module->id,'reports',Yii::app()->user->id,'read_p')),

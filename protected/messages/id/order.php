@@ -72,6 +72,23 @@ return array(
 	'Total Invoice' => 'Total Tagihan',
 	'All Invoice' => 'Semua Tagihan',
 	'Refund Invoice' => 'Tagihan Refund',
-	'Invoices' => 'Tagihan'
+	'Invoices' => 'Tagihan',
+	'Net Profit' => 'Laba Bersih',
+	'Cost' => 'Biaya',
+	'All Order' => 'Semua Order',
+	'Customer' => 'Pelanggan',
+	'Date Interval' => 'Interval Tanggal',
+	'Range' => 'Rentang',
+	'All Customer' => 'Semua Pelanggan',
+	'Average Cost Price' => 'Cost Per Produk',
+	'Bruto Income' => 'Pendapatan Kotor',
+	'Net Income' => 'Pendapatan Bersih',
+	'Product Name' => 'Nama Produk',
+	'Order on this month' => 'Order di bulan ini',
+	'Product Order' => 'Order Produk',
+	'Customer Order' => 'Order Pelanggan',
+	'Sum Of Product Order' => 'Jumlah Produk Diorder',
+	'Amount Of Order' => 'Total Pembelian',
+	'Bruto Income On This Month' => 'Pendapatan kotor bulan ini'
 );
 ?>
