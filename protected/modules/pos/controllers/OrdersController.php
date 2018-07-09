@@ -603,7 +603,8 @@ class OrdersController extends EController
         // for customer tab
         $sql3 = 'SELECT c.name AS customer_name, c.address AS customer_address, 
             SUM(t.quantity) AS total_quantity, 
-            SUM(t.price*t.quantity) AS total_price     
+            SUM(t.price*t.quantity) AS total_price,
+            t.invoice_id      
             FROM tbl_order t 
             LEFT JOIN tbl_customer c ON c.id = t.customer_id 
             WHERE 1';

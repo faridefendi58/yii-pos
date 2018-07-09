@@ -37,10 +37,20 @@ $('.search-form form').submit(function(){
 ");
 ?>
 <ul class="row stats">
-	<li class="col-xs-6">
-		<a class="btn btn-default" href="#all-list"><?php echo $dataProvider->totalItemCount;?></a>
-		<span><?php echo Yii::t('order','Order on this month');?></span>
+	<li class="col-xs-3">
+		<a class="btn btn-default" href="#all-list">
+            <?php echo $productTotal['quantity'];?>
+        </a>
+		<span style="margin-top: 10px;float: left;"><?php echo Yii::t('order','Order on this month');?></span>
 	</li>
+    <li class="col-xs-4">
+        <a class="btn btn-default" href="#product-order">
+            <?php echo number_format($productTotal['tot_price'], 0, ',', '.');?>
+        </a>
+        <span style="margin-top: 10px;float: left;">
+            <?php echo Yii::t('order','Bruto Income On This Month');?>
+        </span>
+    </li>
 </ul>
 <div class="panel panel-default">
 	<div class="panel-heading">
@@ -260,6 +270,21 @@ $('.search-form form').submit(function(){
                                 'type' => 'raw',
                                 'value' => 'number_format($data[\'total_price\'], 0, \',\', \'.\')',
                                 'htmlOptions' => array('style' => 'text-align:right;')
+                            ),
+                            array(
+                                'class' => 'CButtonColumn',
+                                'template' => '{update}',
+                                'buttons' => array
+                                (
+                                    'update' => array(
+                                        'label' => '<i class="fa fa-money"></i>',
+                                        'imageUrl' => false,
+                                        'url' => 'Yii::app()->createUrl("/".Yii::app()->controller->module->id."/invoices/update",array(\'id\'=>$data[\'invoice_id\']))',
+                                        'options' => array('title'=> Yii::t('order', 'Invoice'),'id'=>'update-list'),
+                                        'visible' => 'true',
+                                    ),
+                                ),
+                                'htmlOptions' => array('style'=>'width:10%;','class'=>'table-action'),
                             ),
                         ),
                     )); ?>

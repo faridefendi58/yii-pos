@@ -88,6 +88,7 @@ return array(
 	'Product Order' => 'Order Produk',
 	'Customer Order' => 'Order Pelanggan',
 	'Sum Of Product Order' => 'Jumlah Produk Diorder',
-	'Amount Of Order' => 'Total Pembelian'
+	'Amount Of Order' => 'Total Pembelian',
+	'Bruto Income On This Month' => 'Pendapatan kotor bulan ini'
 );
 ?>
